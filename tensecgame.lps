@@ -1,0 +1,144 @@
+program tensecs;
+
+uses SysUtils, dateutils, StrUtils, Crt;
+
+var
+tstart,tend,tuser,tten, tdiff : tdatetime;
+helpans, y, n, tusers, response, tdiffs: string;
+percent : real;
+
+
+
+procedure diff;
+begin
+if tuser<tten then tdiff := (tten-tuser);
+if tuser>tten then tdiff := (tuser-tten);
+
+tdiffs:=timetostr(tdiff);
+
+if tuser<tten then writeln(tdiffs, ' seconds too soon');
+if tuser>tten then writeln(tdiffs, ' seconds too slow');
+
+delay(3000);
+
+ClrScr;
+
+writeln('Would you like to try again? (y/n)');
+readln(response);
+
+if response=y then startgame;
+endgame;
+
+end;
+
+procedure endgame;
+begin
+writeln('Ok then, press Enter to Close');
+readln();
+
+end;
+
+procedure fail;
+begin
+ClrScr;
+
+writeln('Oh Dear, you pressed the button after ', tusers, ' seconds, which means');
+writeln('you were ');
+
+diff;
+
+end;
+
+procedure victory;
+begin
+ClrScr;
+
+writeln('Well Done! You pressed the button after ', tusers, ' seconds, which');
+writeln('means you guessed 10 seconds exactly!');
+delay(2500);
+ClrScr;
+
+writeln('Would you like to play again?');
+readln(response);
+
+if response=y then startgame;
+else endgame;
+
+
+
+end;
+
+procedure startgame;
+begin
+
+
+ClrScr;
+
+
+writeln('The Game will begin in 3');
+delay(1000);
+ClrScr;
+
+writeln('The Game will begin in 2');
+delay(1000);
+ClrScr;
+
+writeln('The Game will begin in 1');
+delay(1000);
+ClrScr;
+
+
+tstart := time;
+
+Cursoroff;
+
+writeln('The Game has Begun, press Enter once you think 10 seconds has elapsed');
+readln();
+tend := time;
+
+delay(500);
+
+ClrScr;
+
+writeln('How well do you think you did?');
+delay(1000);
+
+writeln('Do you think you were far off?');
+delay(1000);
+
+writeln('Time to find out...');
+delay(1000);
+
+
+tuser := tend - tstart;
+tten := encodetime(0,0,10,0);
+
+tusers := timetostr(tuser);
+
+ClrScr;
+
+if tuser = tten then victory;
+else fail;
+
+
+
+
+end;
+begin
+
+Textcolor(Yellow);
+
+writeln('Welcome to The 10 Second Game');
+delay(2000);
+
+ClrScr;
+
+writeln('The Game begins when you Press Enter, and finishes on the second press');
+writeln('Are you ready to play? (y/n)');
+readln(helpans);
+
+y:=('y');
+
+if helpans=ready then startgame;
+
+end.
