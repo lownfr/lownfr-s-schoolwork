@@ -123,6 +123,27 @@ turn := 1;
               end;
               while (column<1) or (column>3) or (row<1) or (row>3) do
               begin
+              ClrScr;
+              writeln('There was an error with your references');
+              writeln('You will be redirected in 5');
+              delay(500);
+              ClrScr;
+              writeln('Either that space was already taken, or there was another error');
+              writeln('You will be redirected in 4');
+              delay(400);
+              ClrScr;
+              writeln('Either that space was already taken, or there was another error');
+              writeln('You will be redirected in 3');
+              delay(300);
+              ClrScr;
+              writeln('Either that space was already taken, or there was another error');
+              writeln('You will be redirected in 2');
+              delay(200);
+              ClrScr;
+              writeln('Either that space was already taken, or there was another error');
+              writeln('You will be redirected in 1');
+              delay(100);
+              ClrScr;
               enterreference;
               end;
 
