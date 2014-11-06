@@ -124,7 +124,7 @@ turn := 1;
               while (column<1) or (column>3) or (row<1) or (row>3) do
               begin
               ClrScr;
-              writeln('There was an error with your references');
+              writeln('Either that space was already taken, or there was another error');
               writeln('You will be redirected in 5');
               delay(500);
               ClrScr;
