@@ -1,4 +1,4 @@
-program ncmenu;
+program dice2;
 
 uses StrUtils, SysUtils, Crt;
 
@@ -40,6 +40,7 @@ Procedure menu;
 Procedure drawboard;
 begin
         TextBackGround(Blue);
+        TextColor(44);
 
         write(myBoard[1,1]); write(' ');
 	write(myBoard[1,2]); write(' ');
@@ -51,6 +52,7 @@ begin
 	write(myBoard[3,2]); write(' ');
 	writeln(myBoard[3,3]);
         TextBackGround(Black);
+        TextColor(white);
 end;
 
 Procedure playernum;
@@ -124,27 +126,13 @@ turn := 1;
               while (column<1) or (column>3) or (row<1) or (row>3) do
               begin
               ClrScr;
-              writeln('Either that space was already taken, or there was another error');
-              writeln('You will be redirected in 5');
-              delay(500);
+              writeln('Either that space was already taken, or your number was too big or small');
+              writeln('Press Enter to continue');
+              readln();
               ClrScr;
-              writeln('Either that space was already taken, or there was another error');
-              writeln('You will be redirected in 4');
-              delay(400);
-              ClrScr;
-              writeln('Either that space was already taken, or there was another error');
-              writeln('You will be redirected in 3');
-              delay(300);
-              ClrScr;
-              writeln('Either that space was already taken, or there was another error');
-              writeln('You will be redirected in 2');
-              delay(200);
-              ClrScr;
-              writeln('Either that space was already taken, or there was another error');
-              writeln('You will be redirected in 1');
-              delay(100);
-              ClrScr;
+              drawboard;
               enterreference;
+
               end;
 
               myBoard[column,row] := playchar;
@@ -168,3 +156,4 @@ turn := 1;
 
 
 end.
+
