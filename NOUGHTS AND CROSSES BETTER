@@ -7,15 +7,29 @@ var
 	turn, column, row, playnum : integer;
 	playchar : char;
         response : string;
+ procedure CWriteLn(S: String);
+begin
+ GotoXY((80 - Length(S)) div 2, WhereY);
+ WriteLn(S);
+end;
+
+function Center(S: String): String;
+var
+ i: integer;
+begin
+ for i := 1 to (80 - Length(S)) div 2 do
+ S := ' ' + S;
+end;
 
 Procedure menu;
 
         begin
 
+          TextColor(lightgreen);
           while response <>  'P' do
           begin
-          writeln('(P)lay Game');
-          writeln('(R)ules');
+          CWriteLn('(P)Play Game');
+          CWriteLn('(R)Rules');
 
           readln(response);
 
@@ -31,18 +45,28 @@ Procedure menu;
           end;//case
           end;
           end;
+procedure instructionboard;
+begin
+        CWriteLn(myBoard[1,1]); write(' ');
+	CWriteLn(myBoard[1,2]); write(' ');
+	CWriteLn(myBoard[1,3]);
+	CWriteLn(myBoard[2,1]); write(' ');
+	CWriteLn(myBoard[2,2]); write(' ');
+	CWriteLn(myBoard[2,3]);
+	CWriteLn(myBoard[3,1]); write(' ');
+	CWriteLn(myBoard[3,2]); write(' ');
+	CWriteLn(myBoard[3,3]);
 
-
-
-
-
+end;
 
 Procedure drawboard;
 begin
-        TextBackGround(Blue);
-        TextColor(44);
+        window(55,1,80,25);
+        TextBackGround(black);
+        TextColor(lightred);
 
         write(myBoard[1,1]); write(' ');
+
 	write(myBoard[1,2]); write(' ');
 	writeln(myBoard[1,3]);
 	write(myBoard[2,1]); write(' ');
@@ -51,8 +75,9 @@ begin
 	write(myBoard[3,1]); write(' ');
 	write(myBoard[3,2]); write(' ');
 	writeln(myBoard[3,3]);
-        TextBackGround(Black);
-        TextColor(white);
+
+        window(1,1,80,25);
+
 end;
 
 Procedure playernum;
@@ -76,84 +101,133 @@ Procedure enterreference;
 begin
 writeln('Please enter the row of your reference');
 readln(column);
+
+while (column<1) do
+             begin
+             writeln('You have entered a number smaller than 1');
+             writeln('Please enter a number between 1 and 3');
+             writeln('Press Enter to continue');
+             readln();
+             ClrScr;
+             drawboard;
+             enterreference;
+
+             end;
+
+while (column>3) do
+             begin
+             writeln('You have entered a number larger than 3');
+             writeln('Please enter a number between 1 and 3');
+             writeln('Press Enter to continue');
+             readln();
+             ClrScr;
+             drawboard;
+             enterreference;
+
+             end;
+
 writeln('Now enter the column');
 readln(row);
+
+
+while (row<1) do
+             begin
+             writeln('You have entered a number smaller than 1');
+             writeln('Please enter a number between 1 and 3');
+             writeln('Press Enter to continue');
+             readln();
+             ClrScr;
+             drawboard;
+             enterreference;
+
+             end;
+
+while (row>3) do
+             begin
+             writeln('You have entered a number larger than 3');
+             writeln('Please enter a number between 1 and 3');
+             writeln('Press Enter to continue');
+             readln();
+             ClrScr;
+             drawboard;
+             enterreference;
+
+             end;
+
 ClrScr;
 end;
 
 begin
 
-
-
-
-
-
-     menu;
+      menu;
      ClrScr;
 
 
 
 
 
-myBoard[1,1]:='_';
-	myBoard[1,2]:='_';
-	myBoard[1,3]:='_';
+        myBoard[1,1]:='_';
+ 	myBoard[1,2]:='_';
+ 	myBoard[1,3]:='_';
 
-	myBoard[2,1]:='_';
-	myBoard[2,2]:='_';
-	myBoard[2,3]:='_';
 
-	myBoard[3,1]:='_';
-	myBoard[3,2]:='_';
-	myBoard[3,3]:='_';
+ 	myBoard[2,1]:='_';
+ 	myBoard[2,2]:='_';
+ 	myBoard[2,3]:='_';
 
-playnum := 2; //playnum is a variable that is flipped to the other player in
-playernum;    //playernum (a procedure) which also sets playchar (X or O)
-turn := 1;
 
-	while turn < 10 do
-	begin
+ 	myBoard[3,1]:='_';
+ 	myBoard[3,2]:='_';
+ 	myBoard[3,3]:='_';
+
+
+ playnum := 2; //playnum is a variable that is flipped to the other player in
+ playernum;    //playernum (a procedure) which also sets playchar (X or O)
+ turn := 1;
+
+        while turn < 10 do
+ 	begin
         Writeln('Player ', playnum, 's turn. You are ', playchar);
         writeln('Press Enter to Begin');
-        readln();
-        ClrScr;
-        drawboard;
+         readln();
+         ClrScr;
+         drawboard;
 
-              while myBoard[column,row] <> '_'  do
+
+               while myBoard[column,row] <> '_'  do
               begin
-              enterreference;
-              end;
-              while (column<1) or (column>3) or (row<1) or (row>3) do
-              begin
-              ClrScr;
-              writeln('Either that space was already taken, or your number was too big or small');
-              writeln('Press Enter to continue');
-              readln();
-              ClrScr;
-              drawboard;
-              enterreference;
-
-              end;
-
-              myBoard[column,row] := playchar;
-
-              drawboard;
-
-              writeln('Press Enter to proceed');
-              readln();
-
-        playernum;
-        turn := turn + 1;
+               enterreference;
+               end;
+           while (column<1) or (column>3) or (row<1) or (row>3) do
+               begin
+               ClrScr;
+               writeln('Either that space was already taken, or your number was too big or small');
+               writeln('Press Enter to continue');
+               readln();
+               ClrScr;
+               drawboard;
+               enterreference;
 
 
+               end;
 
 
+               myBoard[column,row] := playchar;
 
-         end;
 
+               drawboard;
+
+
+               writeln('Press Enter to proceed');
+               readln();
+
+
+         playernum;
+         turn := turn + 1;
 
 
 
+
+          end;
 
 end.
-
