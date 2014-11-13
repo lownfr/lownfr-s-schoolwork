@@ -1,0 +1,31 @@
+for i=0 to 2 do
+    
+    BEGIN
+    j:=0
+    
+    [i,j]:=loc0
+    j:=j+1
+    [i,j]:=loc1
+    j:=j+1
+    [i,j]:=loc2
+    
+    if (loc0=loc1) AND (loc1=loc2) then     win
+    
+    END
+    
+    
+    
+for j=0 to 2 do
+
+    BEGIN
+    i:=0
+    
+    [i,j]:=loc0
+    i:=i+1
+    [i,j]:=loc1
+    i:=i+1
+    [i,j]:=loc2
+    
+    if (loc0=loc1) AND (loc1=loc2) then     win
+    
+    END
