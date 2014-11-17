@@ -1,0 +1,455 @@
+program finalonlybetter;
+uses StrUtils, SysUtils, Crt;
+var
+	myBoard : Array[1..3,1..3] of string;
+	turn, column, row, playnum, textcol, nullcount, randomstart : integer;
+	playchar, ansend, answin : char;
+        response, loc0, loc1, loc2, play1, play2, winchar, playwin, winner : string;
+        win : boolean;
+
+
+function Center(S: String): String;
+        var
+         i: integer;
+        begin
+         for i := 1 to (80 - Length(S)) div 2 do
+         S := ' ' + S;
+        end;
+
+procedure CWriteLn(S: String);
+begin
+ GotoXY((80 - Length(S)) div 2, WhereY);
+ WriteLn(S);
+end;
+
+procedure header;
+begin
+cwriteln('__  __ ____ __  _______ _   _ _____');
+cwriteln('| \ | |  _  | | | |  __ | | | |_   _/  ___|     ');
+cwriteln('|  \| | | | | | | | |  \| |_| | | | \ `--.      ');
+cwriteln('| . ` | | | | | | | | __|  _  | | |  `--. \     ');
+cwriteln('| |\  \ \_/ | |_| | |_\ | | | | | | /\__/ /     ');
+cwriteln('\_____/___________ \____\_| |_/ \_/ \____/      ');
+cwriteln('                / _ \| \ | |  _  \                             ');
+cwriteln('               / /_\ |  \| | | | |                             ');
+cwriteln('               |  _  | . ` | | | |                             ');
+cwriteln('               | | | | |\  | |/ /                              ');
+cwriteln('         \___________|_____ _____ _____ _____ _____      ');
+cwriteln('/  __ | ___ |  _  /  ___/  ___|  ___/  ___|     ');
+cwriteln('| /  \| |_/ | | | \ `--.\ `--.| |__ \ `--.      ');
+cwriteln('| |   |    /| | | |`--. \`--. |  __| `--. \     ');
+cwriteln('| \__/| |\ \\ \_/ /\__/ /\__/ | |___/\__/ /     ');
+cwriteln(' \____\_| \_|\___/\____/\____/\____/\____/      ');
+end;
+
+procedure textcolchange;
+begin
+ClrScr;
+writeln();
+cwriteln('Enter the code for the number that you would like to change the text to');
+writeln();
+cwriteln('1 - Blue              9 - Light Blue               ');
+cwriteln('2 - Green            10 - Light Green              ');
+cwriteln('3 - Cyan             11 - Light Cyan               ');
+cwriteln('4 - Red              12 - Light Red                ');
+cwriteln('5 - Magenta          13 - Light Magenta            ');
+cwriteln('6 - Brown            14 - Yellow                   ');
+cwriteln('7 - White            15 - High-Intensity White     ');
+cwriteln('8 - Grey                                           ');
+
+readln(textcol);
+
+TextColor(textcol);
+
+end;
+
+procedure rules;
+begin
+ClrScr;
+header;
+writeln();
+              cwriteln('Noughts and Crosses is a game for two players, X and O,');
+              cwriteln('who take turns marking the spaces in a 3 by 3 grid.');
+              cwriteln('The player who succeeds in placing three respective');
+              cwriteln('marks in a horizontal, vertical, or diagonal row');
+              cwriteln('wins the game.');
+              writeln();
+              cwriteln('Press Enter to return to the Menu');
+              readln();
+end;
+
+procedure credits;
+begin
+              ClrScr;
+              header;
+              writeln();
+              cwriteln('This program was authored by Bailey Crouch, Bryony Martin and Oliver            ');
+              cwriteln('Morris. Copyright Disclaimer Under Section 107 of the Copyright Act             ');
+              cwriteln('1976, allowance is made for "fair use" for purposes such as criticism,          ');
+              cwriteln('comment, news reporting, teaching, scholarship, and research. Fair              ');
+              cwriteln('use is a use permitted by copyright statute that might otherwise be             ');
+              cwriteln('infringing. Non-profit, educational or personal use tips the balance            ');
+              cwriteln('in favor of fair use.                                                           ');
+              writeln();
+              writeln();
+              cwriteln('Press Enter to return to the Menu');
+              readln();
+
+end;
+
+Procedure menu;
+
+        begin
+         response:='m';
+
+          TextColor(lightgreen);
+          while (response <>  'P') do
+          begin
+          ClrScr;
+          header;
+          writeln();
+          CWriteLn('(P) Play Game              ');
+          CWriteLn('(R) Rules                  ');
+          CWriteln('(A) Acknowledgements       ');
+          CWriteln('(T) Text Appearance        ');
+
+          readln(response);
+
+          case response of
+
+          'R' : rules;
+          'r' : rules;
+          'A' : credits;
+          'a' : credits;
+          'T' : textcolchange;
+          't' : textcolchange;
+          'p' : response:='P';
+
+
+
+          end;//case
+          end;
+          end;
+
+procedure instructionboard;
+begin
+        CWriteLn(myBoard[1,1]); write(' ');
+	CWriteLn(myBoard[1,2]); write(' ');
+	CWriteLn(myBoard[1,3]);
+	CWriteLn(myBoard[2,1]); write(' ');
+	CWriteLn(myBoard[2,2]); write(' ');
+	CWriteLn(myBoard[2,3]);
+	CWriteLn(myBoard[3,1]); write(' ');
+	CWriteLn(myBoard[3,2]); write(' ');
+	CWriteLn(myBoard[3,3]);
+
+end;
+
+Procedure drawboard;
+begin
+
+        write(myBoard[1,1]); write(' ');
+        write(myBoard[1,2]); write(' ');
+	writeln(myBoard[1,3]);
+	write(myBoard[2,1]); write(' ');
+	write(myBoard[2,2]); write(' ');
+	writeln(myBoard[2,3]);
+	write(myBoard[3,1]); write(' ');
+	write(myBoard[3,2]); write(' ');
+	writeln(myBoard[3,3]);
+
+
+
+end;
+
+Procedure playernum;
+begin
+
+case playnum of
+1 :  begin
+     playnum:=2         ;
+     playchar:='X'      ;
+     end;
+
+2 :  begin
+     playnum:=1         ;
+     playchar:='O'      ;
+     end;
+end;
+
+end;
+
+Procedure enterreference;
+begin
+
+
+if nullcount>1 then
+begin
+cwriteln('That space is already taken, press Enter to try again');
+readln();
+ClrScr;
+end
+
+else
+
+writeln();
+cwriteln('Please enter the row of your reference');
+readln(column);
+
+while (column<1) do
+             begin
+             cwriteln('You have entered a number smaller than 1');
+             cwriteln('Please enter a number between 1 and 3');
+             cwriteln('Press Enter to continue');
+             readln();
+             ClrScr;
+             header;
+             writeln();
+             drawboard;
+             enterreference;
+
+             end;
+
+while (column>3) do
+             begin
+             cwriteln('You have entered a number larger than 3');
+             cwriteln('Please enter a number between 1 and 3');
+             cwriteln('Press Enter to continue');
+             readln();
+             ClrScr;
+             header;
+             writeln();
+             drawboard;
+             enterreference;
+
+             end;
+
+cwriteln('Now enter the column');
+readln(row);
+
+
+while (row<1) do
+             begin
+             cwriteln('You have entered a number smaller than 1');
+             cwriteln('Please enter a number between 1 and 3');
+             cwriteln('Press Enter to continue');
+             readln();
+             ClrScr;
+             header;
+             writeln();
+             drawboard;
+             enterreference;
+
+             end;
+
+while (row>3) do
+             begin
+             cwriteln('You have entered a number larger than 3');
+             cwriteln('Please enter a number between 1 and 3');
+             cwriteln('Press Enter to continue');
+             readln();
+             ClrScr;
+             header;
+             writeln();
+             drawboard;
+             enterreference;
+
+             end;
+
+ClrScr;
+end;
+
+Procedure winat;
+
+ begin
+ turn:=turn+945;
+ case playchar of
+ 'O' : playwin:=play1;
+ 'X' : playwin:=play2;
+ end;
+ ClrScr;
+ header;
+ writeln();
+ writeln(playwin, ' Wins! Congratulations. It took you ', turn-945, ' rounds to win.');
+ writeln();
+ writeln('Would you like to return to the menu for another game? (Y/N)');
+ readln(answin);
+ if answin='y' then answin:='Y'
+
+ end;
+
+Procedure endcheck;
+var i, j : integer;
+begin
+
+for i:=1 to 3 do
+               begin
+               j:=1;
+               loc0:=myBoard[i,j];
+               loc1:=myBoard[i,(j+1)];
+               loc2:=myBoard[i,(j+2)];
+
+               if (loc0=loc1) and (loc1=loc2) and (loc0<>'_') then
+                                                                  begin
+                                                                  win:=true;
+                                                                  winner:=myBoard[i,j];
+                                                                  end;
+               end;
+
+for j:=1 to 3 do
+               begin
+               i:=1;
+               loc0:=myBoard[i,j];
+               loc1:=myBoard[(i+1),j];
+               loc2:=myBoard[(i+2),j];
+
+               if (loc0=loc1) and (loc1=loc2) and (loc0<>'_') then
+                                                                  begin
+                                                                  win:=true;
+                                                                  winner:=loc0;
+                                                                  end;
+               end;
+
+
+if (myBoard[1,1] = myBoard[2,2]) and (myBoard[2,2] = myBoard[3,3]) and (myBoard[3,3] <> '_') then
+   begin
+   winner := myBoard[1,1];
+   win:=true;
+   end;
+//statement4
+if (myBoard[1,3] = myBoard[2,2]) and (myBoard[2,2] = myBoard[3,1]) and (myBoard[3,1] = 'O') then
+   begin
+   winner := myBoard[1,3];
+   win:=true;
+   end
+
+end;
+
+procedure names;
+begin
+header;
+writeln();
+cwriteln('Player 1, You are playing as "O", please enter your name:');
+readln(play1);
+ClrScr;
+header;
+writeln();
+cwriteln('Player 2, you are playing as "X", please enter your name:');
+readln(play2);
+ClrScr;
+end;
+
+procedure draw;
+begin
+ClrScr;
+header;
+writeln();
+ cwriteln('You both Win - its a draw!');
+ writeln();
+ writeln();
+ cwriteln('Would you like to return to the menu for another game? (Y/N)');
+ readln(ansend);
+ end;
+
+procedure goodbye;
+begin
+ClrScr;
+header;
+writeln();
+cwriteln('Ok, well thanks for Playing!');
+writeln();
+cwriteln('Goodbye!');
+readln();
+end;
+
+begin //mainprog
+
+ansend:='Y';
+while ansend='Y' do
+begin;
+menu;
+ClrScr;
+
+myBoard[1,1]:='_';
+myBoard[1,2]:='_';
+myBoard[1,3]:='_';
+myBoard[2,1]:='_';
+myBoard[2,2]:='_';
+myBoard[2,3]:='_';
+myBoard[3,1]:='_';
+myBoard[3,2]:='_';
+myBoard[3,3]:='_';
+
+names;
+
+playnum:=2;
+playernum;
+
+turn:=0;
+
+while turn < 9 do
+      begin
+
+      writeln();
+      case playnum of
+      1 : begin
+          header;
+          writeln();
+          writeln(                        play1, ' (player ',playnum,'), it is your turn, You are playing as ', playchar, ' and it is turn number ', (turn+1));
+          end;
+      2 : begin
+          header;
+          writeln();
+          writeln(                        play2, ' (player ',playnum,'), it is your turn, You are playing as ', playchar, ' and it is turn number ', turn);
+          end;
+      end;
+      writeln();
+      writeln('                          Press Enter to Begin');
+      readln();
+      ClrScr;
+      header;
+      drawboard;
+                enterreference;
+
+                while myBoard[column,row] <> '_'  do
+              begin
+              ClrScr;
+              header;
+              writeln();
+              enterreference;
+              end;
+
+                      header;
+                      writeln();
+                      myBoard[column,row] := playchar;
+                      ClrScr;
+                      header;
+                      writeln();
+                      drawboard;
+
+              endcheck;
+              if win=true then winat;
+
+
+               ClrScr;
+
+
+         playernum;
+         turn := turn + 1;
+
+
+
+
+          end;
+
+if win<>true then begin
+
+draw;
+if ansend='y' then ansend:='Y'
+end;
+
+end;
+
+goodbye;
+
+end.
