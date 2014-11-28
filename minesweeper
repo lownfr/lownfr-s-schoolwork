@@ -7,6 +7,7 @@ var
   r, count, i, j, x, y, n, bg, score  : integer;
   text : string;
   s:s80;
+  close : boolean;
 
   function Center(S: String): String;
           var
@@ -42,33 +43,37 @@ procedure drawboard;
 var a, b : integer;
 
   begin;
-gotoxy(17,1);
-writeln('ansboard');
 gotoxy(17,2);
-writeln('1 2 3 4 5 6 7 8 9');
+writeln('ansboard');
 gotoxy(17,3);
+writeln('1 2 3 4 5 6 7 8 9');
+gotoxy(17,4);
 writeln(chr(124),' ',chr(124),' ',chr(124),' ',chr(124),' ',chr(124),' ',chr(124),' ',chr(124),' ',chr(124),' ',chr(124));
 bg:=2;
 for a:=0 to 8 do
   begin
        textbg;
-       gotoxy(13,(4+a));
+       gotoxy(13,(5+a));
        writeln((a+1),' - ', ansboard[a,0],' ', ansboard[a,1], ' ', ansboard[a,2],' ', ansboard[a,3],' ', ansboard[a,4],' ', ansboard[a,5],' ', ansboard[a,6],' ', ansboard[a,7],' ', ansboard[a,8]);
        end;
 bg:=2;
-GoToXY(39,7);
+GoToXY(41,7);
 Writeln('disboard');
 
-GoToXY(39,8);
+GoToXY(41,8);
 writeln('1 2 3 4 5 6 7 8 9'); writeln();
-GoToXY(39,9);
+GoToXY(41,9);
 writeln(chr(124),' ',chr(124),' ',chr(124),' ',chr(124),' ',chr(124),' ',chr(124),' ',chr(124),' ',chr(124),' ',chr(124));
 for a:=0 to 8 do
   begin
        textbg;
        gotoxy(37,(10+a));
-       writeln((a+1),' ', disboard[a,0],' ', disboard[a,1], ' ', disboard[a,2],' ', disboard[a,3],' ', disboard[a,4],' ', disboard[a,5],' ', disboard[a,6],' ', disboard[a,7],' ', disboard[a,8]);
+       writeln((a+1),' - ', disboard[a,0],' ', disboard[a,1], ' ', disboard[a,2],' ', disboard[a,3],' ', disboard[a,4],' ', disboard[a,5],' ', disboard[a,6],' ', disboard[a,7],' ', disboard[a,8]);
        end;
+gotoxy(70,2);
+writeln('Score: ', score);
+
+
   end;
 
 procedure setup;
@@ -182,30 +187,9 @@ end;
 end;
 end;
 
-
-
-
+procedure round;
 begin
-  cursoroff;
-  for i:=0 to 8 do
-  begin
-    for j:=0 to 8 do
-    begin
-      disboard[i,j]:=chr(254);
-     end;
-    end;
-
-
-   randomize;
-  //for loop to create random references for 12 mines
-
-  for count:=1 to 12 do
-  begin
-    i:=random(8);
-    j:=random(8);
-    ansboard[i,j]:='b';
-    end;
-  setup;
+  ClrScr;
   drawboard;
   gotoxy(13,20);
   writeln('Enter your x value:');
@@ -220,15 +204,14 @@ begin
 
   ClrScr;
 
-
-      gotoxy((36+(2*x)),19);
-      writeln('/',chr(124),chr(92));
-      gotoxy((37+(2*x)),20);
-      writeln(chr(124));
-      gotoxy((37+(2*x)),21);
-      writeln(chr(124));
-      gotoxy((37+(2*x)),22);
-      writeln('^');
+  gotoxy((38+(2*x)),19);
+  writeln('/',chr(124),chr(92));
+  gotoxy((39+(2*x)),20);
+  writeln(chr(124));
+  gotoxy((39+(2*x)),21);
+  writeln(chr(124));
+  gotoxy((39+(2*x)),22);
+  writeln('^');
 
 
   drawboard;
@@ -244,6 +227,50 @@ begin
   writeln(')');
   gotoxy(20,22);
   readln(y);
+end;
+
+
+
+
+begin
+  cursoroff;
+  for i:=0 to 8 do
+  begin
+  for j:=0 to 8 do
+        begin
+        disboard[i,j]:=chr(254);
+        end;
+  end;
+
+  randomize;
+
+  for count:=1 to 12 do
+  begin
+    i:=random(8);
+    j:=random(8);
+    ansboard[i,j]:='b';
+    end;
+
+  setup;
+
+  while close<>True do
+begin
+round;
+
+x:=x-1;
+y:=y-1;
+
+disboard[y,x]:=ansboard[y,x];
+drawboard;
+readln();
+
+
+end;
+
+
+
+
+
 
 
 
