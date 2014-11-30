@@ -1,0 +1,306 @@
+program minesweeperbeta12;
+Uses CRT, strutils, sysutils;
+type
+   scoreboard = record
+     name : string[6];
+     score : integer;
+     end;
+   s80=string[80];
+
+var
+  disboard, ansboard : array[0..8,0..8] of string;
+  list : array[0..80] of string;
+  r, count, i, j, x, y, n, bg, score  : integer;
+  text : string;
+  s:s80;
+  close : boolean;
+  sbd : scoreboard;
+  f : file of scoreboard;
+
+  function Center(S: String): String;
+          var
+           i: integer;
+          begin
+           for i := 1 to (80 - Length(S)) div 2 do
+           S := ' ' + S;
+          end;
+
+  procedure CWriteLn(S: String);
+  begin
+   GotoXY((80 - Length(S)) div 2, WhereY);
+   WriteLn(S);
+  end;
+
+procedure textbg;
+begin
+ case bg of
+ 1 : begin
+     bg:=2;
+     textbackground(white);
+     textcolor(black);
+     end;
+ 2 : begin
+     bg:=1;
+     textbackground(black);
+     textcolor(white);
+     end;
+ end;
+ end;
+
+procedure drawboard;
+var a, b : integer;
+
+  begin;
+gotoxy(17,2);
+writeln('ansboard (hidden array)');
+gotoxy(17,3);
+writeln('1 2 3 4 5 6 7 8 9');
+gotoxy(17,4);
+writeln(chr(124),' ',chr(124),' ',chr(124),' ',chr(124),' ',chr(124),' ',chr(124),' ',chr(124),' ',chr(124),' ',chr(124));
+bg:=2;
+for a:=0 to 8 do
+  begin
+       textbg;
+       gotoxy(13,(5+a));
+       writeln((a+1),' - ', ansboard[a,0],' ', ansboard[a,1], ' ', ansboard[a,2],' ', ansboard[a,3],' ', ansboard[a,4],' ', ansboard[a,5],' ', ansboard[a,6],' ', ansboard[a,7],' ', ansboard[a,8]);
+       end;
+bg:=2;
+GoToXY(41,7);
+Writeln('disboard (shown array)');
+
+GoToXY(41,8);
+writeln('1 2 3 4 5 6 7 8 9'); writeln();
+GoToXY(41,9);
+writeln(chr(124),' ',chr(124),' ',chr(124),' ',chr(124),' ',chr(124),' ',chr(124),' ',chr(124),' ',chr(124),' ',chr(124));
+for a:=0 to 8 do
+  begin
+       textbg;
+       gotoxy(37,(10+a));
+       writeln((a+1),' - ', disboard[a,0],' ', disboard[a,1], ' ', disboard[a,2],' ', disboard[a,3],' ', disboard[a,4],' ', disboard[a,5],' ', disboard[a,6],' ', disboard[a,7],' ', disboard[a,8]);
+       end;
+gotoxy(70,2);
+writeln('Score: ', score);
+
+
+  end;
+
+procedure setup;
+var mines, a, b : integer;
+begin
+ for a:=1 to 7 do
+ begin
+   for b:=1 to 7 do
+   begin
+     if ansboard[a,b]<>'b' then      begin
+                                     mines:=0;
+                                     if ansboard[(a-1),(b-1)]='b' then mines:=mines+1;
+                                     if ansboard[a,(b-1)]='b' then mines:=mines+1;
+                                     if ansboard[(a+1),(b-1)]='b' then mines:=mines+1;
+                                     if ansboard[(a-1),b]='b' then mines:=mines+1;
+                                     if ansboard[(a+1),b]='b' then mines:=mines+1;
+                                     if ansboard[(a-1),(b+1)]='b' then mines:=mines+1;
+                                     if ansboard[a,(b+1)]='b' then mines:=mines+1;
+                                     if ansboard[(a+1),(b+1)]='b' then mines:=mines+1;
+                                     ansboard[a,b]:=IntToStr(mines);
+                                     end;
+
+  end;
+   end;
+  for b:=1 to 7 do
+  begin
+    a:=0;
+    if ansboard[a,b]<>'b' then begin
+                                    mines:=0;
+                                    if ansboard[a,(b-1)]='b' then mines:=mines+1;
+                                    if ansboard[a,(b+1)]='b' then mines:=mines+1;
+                                    if ansboard[(a+1),(b-1)]='b' then mines:=mines+1;
+                                    if ansboard[(a+1),b]='b' then mines:=mines+1;
+                                    if ansboard[(a+1),(b+1)]='b' then mines:=mines+1;
+                                    ansboard[a,b]:=IntToStr(mines);
+
+  end;
+ end;
+  for b:=1 to 7 do
+  begin
+    a:=8;
+    if ansboard[a,b]<>'b' then begin
+                                    mines:=0;
+                                    if ansboard[(a-1),(b-1)]='b' then mines:=mines+1;
+                                    if ansboard[(a-1),b]='b' then mines:=mines+1;
+                                    if ansboard[(a-1),(b+1)]='b' then mines:=mines+1;
+                                    if ansboard[a,(b-1)]='b' then mines:=mines+1;
+                                    if ansboard[a,(b+1)]='b' then mines:=mines+1;
+                                    ansboard[a,b]:=IntToStr(mines);
+  end;
+ end;
+  for a:=1 to 7 do
+  begin
+    b:=0;
+    if ansboard[a,b]<>'b' then begin
+                                    mines:=0;
+                                    if ansboard[(a-1),b]='b' then mines:=mines+1;
+                                    if ansboard[(a+1),b]='b' then mines:=mines+1;
+                                    b:=1;
+                                    if ansboard[(a-1),b]='b' then mines:=mines+1;
+                                    if ansboard[a,b]='b' then mines:=mines+1;
+                                    if ansboard[(a+1),b]='b' then mines:=mines+1;
+                                    ansboard[a,(b-1)]:=IntToStr(mines);
+  end;
+  end;
+  for a:=1 to 7 do
+  begin
+    b:=8;
+    if ansboard[a,b]<>'b' then begin
+                                    mines:=0;
+                                    if ansboard[(a-1),b]='b' then mines:=mines+1;
+                                    if ansboard[(a+1),b]='b' then mines:=mines+1;
+                                    b:=7;
+                                    if ansboard[(a-1),b]='b' then mines:=mines+1;
+                                    if ansboard[a,b]='b' then mines:=mines+1;
+                                    if ansboard[(a+1),b]='b' then mines:=mines+1;
+                                    ansboard[a,(b+1)]:=IntToStr(mines);
+  end;
+  end;
+  if ansboard[0,0]<>'b' then begin
+                                  mines:=0;
+                                  if ansboard[0,1]='b' then mines:=mines+1;
+                                  if ansboard[1,0]='b' then mines:=mines+1;
+                                  if ansboard[1,1]='b' then mines:=mines+1;
+                                  ansboard[0,0]:=IntToStr(mines);
+
+ end;
+  if ansboard[0,8]<>'b' then begin
+                                  mines:=0;
+                                  if ansboard[0,7]='b' then mines:=mines+1;
+                                  if ansboard[1,7]='b' then mines:=mines+1;
+                                  if ansboard[1,8]='b' then mines:=mines+1;
+                                  ansboard[0,8]:=IntToStr(mines);
+
+end;
+  if ansboard[8,0]<>'b' then begin
+                                  mines:=0;
+                                  if ansboard[8,1]='b' then mines:=mines+1;
+                                  if ansboard[7,1]='b' then mines:=mines+1;
+                                  if ansboard[7,0]='b' then mines:=mines+1;
+                                  ansboard[8,0]:=IntToStr(mines);
+
+end;
+  if ansboard[8,8]<>'b' then begin
+                                  mines:=0;
+                                  if ansboard[8,7]='b' then mines:=mines+1;
+                                  if ansboard[7,7]='b' then mines:=mines+1;
+                                  if ansboard[7,8]='b' then mines:=mines+1;
+                                  ansboard[8,8]:=IntToStr(mines);
+
+end;
+end;
+
+procedure round;
+begin
+  ClrScr;
+  drawboard;
+  gotoxy(13,20);
+  writeln('Enter your x value:');
+  gotoxy(17,22);
+  writeln('(');
+  gotoxy(19,22);
+  writeln(',');
+  gotoxy(21,22);
+  writeln(')');
+  gotoxy(18,22);
+  readln(x);
+
+  ClrScr;
+
+  gotoxy((38+(2*x)),19);
+  writeln('/',chr(124),chr(92));
+  gotoxy((39+(2*x)),20);
+  writeln(chr(124));
+  gotoxy((39+(2*x)),21);
+  writeln(chr(124));
+  gotoxy((39+(2*x)),22);
+  writeln('^');
+
+
+  drawboard;
+  gotoxy(13,20);
+  writeln('Now enter your y value:');
+  gotoxy(17,22);
+  writeln('(');
+  gotoxy(18,22);
+  writeln(x);
+  gotoxy(19,22);
+  writeln(',');
+  gotoxy(21,22);
+  writeln(')');
+  gotoxy(20,22);
+  readln(y);
+end;
+
+
+
+
+begin
+
+  assignfile(f, 'sbd.dat');
+  rewrite(f);
+
+  sbd.name  := 'eommlg';
+  sbd.score := 121;
+
+  write(f,sbd);
+  closefile(f);
+
+
+
+
+
+
+
+
+  cursoroff;
+  for i:=0 to 8 do
+  begin
+       for j:=0 to 8 do
+           begin
+           disboard[i,j]:=chr(254);
+           end;
+  end;
+
+  randomize;
+
+  for count:=1 to 12 do
+      begin
+      i:=random(8);
+      j:=random(8);
+      ansboard[i,j]:='b';
+      end;
+
+  setup;
+
+  while close<>True do
+begin
+round;
+
+x:=x-1;
+y:=y-1;
+
+if ansboard[y,x]<>'b' then score:=score+2;
+disboard[y,x]:=ansboard[y,x];
+drawboard;
+readln();
+
+
+end;
+
+
+
+
+
+
+
+
+
+
+
+end.
